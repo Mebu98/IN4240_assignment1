@@ -14,3 +14,4 @@ test('Send Customer Care message (task 1.5)', async ({ page }) => {
   await page.getByRole('button', { name: 'Send to Customer Care' }).click();
   expect(page.getByText('Thank you test'))
 });
+

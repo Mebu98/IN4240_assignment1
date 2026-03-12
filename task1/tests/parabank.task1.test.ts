@@ -12,5 +12,6 @@ test('Send Customer Care message (task 1.5)', async ({ page }) => {
   await page.locator('#message').click();
   await page.locator('#message').fill('Test message.');
   await page.getByRole('button', { name: 'Send to Customer Care' }).click();
-  expect(page.getByText('Thank you test'))
+  await expect(page.getByText('Thank you test')).toBeVisible();
 });
+

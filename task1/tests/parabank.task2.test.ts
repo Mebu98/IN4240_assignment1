@@ -42,7 +42,13 @@ test.describe('Tests with beforeEach & afterEach', () => {
         await expect(page.getByRole('button', {name: 'Log In'})).toBeVisible()
     })
 
-    test('title', async ({page}) => {
-
+    test('Request loan', async ({page}) => {
+        await page.getByRole('link', { name: 'Request Loan' }).click();
+        await page.locator('#amount').click();
+        await page.locator('#amount').fill('1');
+        await page.locator('#amount').press('Tab');
+        await page.locator('#downPayment').fill('0');
+        await page.getByRole('button', {name: 'Apply Now'}).click();
+        await expect(page.getByRole('heading', {name: 'Loan Request Processed'})).toBeVisible()
     })
 })

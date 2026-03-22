@@ -4,6 +4,8 @@ import * as dotenv from "dotenv";
 dotenv.config();
 const accountName = process.env.TEST_ACCOUNT_NAME;
 const accountPassword = process.env.TEST_ACCOUNT_PASSWORD;
+
+// Can have website running in Docker and then use localhost url instead :)
 const indexUrl = process.env.INDEX_URL || 'https://parabank.parasoft.com/parabank/index.htm';
 
 async function login(page, username, password) {
@@ -34,7 +36,7 @@ test.describe('Tests with beforeEach & afterEach', () => {
         await expect(page.getByRole('heading', {name: 'Accounts Overview'})).toBeVisible()
     })
 
-    test.afterEach('Logout',async ({page}) => {
+    test.afterEach('Logout', async ({page}) => {
         await page.getByRole('link', {name: 'home', exact: true}).click();
         await page.getByRole('link', {name: 'Log Out'}).click();
 
@@ -43,12 +45,27 @@ test.describe('Tests with beforeEach & afterEach', () => {
     })
 
     test('Request loan', async ({page}) => {
-        await page.getByRole('link', { name: 'Request Loan' }).click();
+        await page.getByRole('link', {name: 'Request Loan'}).click();
         await page.locator('#amount').click();
         await page.locator('#amount').fill('1');
         await page.locator('#amount').press('Tab');
         await page.locator('#downPayment').fill('0');
         await page.getByRole('button', {name: 'Apply Now'}).click();
         await expect(page.getByRole('heading', {name: 'Loan Request Processed'})).toBeVisible()
+    })
+
+    test('Open Checking Account', async ({page}) => {
+        await page.getByRole('link', {name: 'Open New Account'}).click();
+        await page.getByRole('button', {name: 'Open New Account'}).click();
+        await expect(page.getByRole('heading', {name: 'Account Opened!'})).toBeVisible()
+    })
+
+    test('Transfer Funds', async ({page}) => {
+        await page.locator('#leftPanel').getByRole('link', {name: 'Transfer Funds'}).click();
+        await page.locator('#amount').click();
+        await page.locator('#amount').fill('1');
+        await page.keyboard.press('ArrowDown');
+        await page.getByRole('button', {name: 'Transfer'}).click();
+        await expect(page.getByRole('heading', {name: 'Transfer Complete!'})).toBeVisible()
     })
 })
